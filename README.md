@@ -1,6 +1,6 @@
 # video-summary
 
-A Claude skill that monitors a YouTube channel and produces bilingual summaries of recent videos.
+A Claude skill that monitors a YouTube channel and produces summaries of recent videos — always in English, plus whatever language you write your prompt in.
 
 ---
 
@@ -16,11 +16,13 @@ A Claude skill that monitors a YouTube channel and produces bilingual summaries 
 ## English
 
 ### What it does
-Give Claude a YouTube channel URL and a timeframe, and it will:
+Give Claude a YouTube channel URL and it will:
 1. Fetch the channel's recent uploads
 2. Filter for videos posted within your specified timeframe (default: last 24 hours)
 3. Download the English subtitles for each video
-4. Produce a bilingual summary in **English + Chinese** for each one
+4. Produce a summary in **English + your prompt language** for each one
+
+If you write your prompt in Japanese, you get English + Japanese. In Spanish, English + Spanish. In English, English only.
 
 ### Prerequisites
 Install [yt-dlp](https://github.com/yt-dlp/yt-dlp) before using this skill:
@@ -51,9 +53,9 @@ If you don't specify a timeframe, the skill defaults to the **last 24 hours**.
 
 ### Output format
 For each video found, you'll get:
-- Video title, date, and URL
+- Video title, date (in your local timezone), and URL
 - English summary with main topic and key points (under 600 words)
-- Chinese summary with the same content (under 600 words)
+- Summary in your prompt language with the same content (under 600 words), if different from English
 - A final count of how many videos were processed
 
 ---
@@ -61,11 +63,13 @@ For each video found, you'll get:
 ## Español
 
 ### Qué hace
-Proporciona a Claude la URL de un canal de YouTube y un período de tiempo, y este:
+Proporciona a Claude la URL de un canal de YouTube y este:
 1. Obtendrá las últimas subidas del canal
 2. Filtrará los videos publicados dentro del período indicado (por defecto: últimas 24 horas)
 3. Descargará los subtítulos en inglés de cada video
-4. Generará un resumen bilingüe en **inglés + chino** para cada uno
+4. Generará un resumen en **inglés + el idioma de tu mensaje** para cada uno
+
+Si escribes en español, obtienes inglés + español. En japonés, inglés + japonés. En inglés, solo inglés.
 
 ### Requisitos previos
 Instala [yt-dlp](https://github.com/yt-dlp/yt-dlp) antes de usar esta skill:
@@ -96,9 +100,9 @@ Si no especificas un período de tiempo, la skill usará las **últimas 24 horas
 
 ### Formato de salida
 Por cada video encontrado recibirás:
-- Título, fecha y URL del video
+- Título, fecha (en tu zona horaria local) y URL del video
 - Resumen en inglés con tema principal y puntos clave (menos de 600 palabras)
-- Resumen en chino con el mismo contenido (menos de 600 palabras)
+- Resumen en español con el mismo contenido (menos de 600 palabras)
 - Un conteo final de cuántos videos fueron procesados
 
 ---
@@ -106,11 +110,13 @@ Por cada video encontrado recibirás:
 ## 简体中文
 
 ### 功能介绍
-向 Claude 提供一个 YouTube 频道 URL 和时间范围，它将会：
+向 Claude 提供一个 YouTube 频道 URL，它将会：
 1. 获取该频道的最新上传视频
 2. 筛选在指定时间范围内发布的视频（默认：过去 24 小时）
 3. 下载每个视频的英文字幕
-4. 为每个视频生成**英文 + 中文**双语摘要
+4. 为每个视频生成**英文 + 你使用的语言**的摘要
+
+用中文提问，获得英文 + 简体中文摘要。用日文提问，获得英文 + 日文摘要。用英文提问，仅输出英文。
 
 ### 前提条件
 使用此技能前，请先安装 [yt-dlp](https://github.com/yt-dlp/yt-dlp)：
@@ -141,9 +147,9 @@ https://www.youtube.com/@频道名称 这周发了什么？
 
 ### 输出格式
 对于找到的每个视频，您将获得：
-- 视频标题、日期和链接
+- 视频标题、日期（按您的本地时区）和链接
 - 英文摘要，包含主要主题和要点（600 字以内）
-- 中文摘要，内容相同（600 字以内）
+- 简体中文摘要，内容相同（600 字以内）
 - 处理视频数量的最终统计
 
 ---
@@ -151,11 +157,13 @@ https://www.youtube.com/@频道名称 这周发了什么？
 ## 繁體中文
 
 ### 功能介紹
-向 Claude 提供一個 YouTube 頻道 URL 和時間範圍，它將會：
+向 Claude 提供一個 YouTube 頻道 URL，它將會：
 1. 獲取該頻道的最新上傳影片
 2. 篩選在指定時間範圍內發布的影片（預設：過去 24 小時）
 3. 下載每個影片的英文字幕
-4. 為每個影片生成**英文 + 中文**雙語摘要
+4. 為每個影片生成**英文 + 你使用的語言**的摘要
+
+用繁體中文提問，獲得英文 + 繁體中文摘要。用日文提問，獲得英文 + 日文摘要。用英文提問，僅輸出英文。
 
 ### 前提條件
 使用此技能前，請先安裝 [yt-dlp](https://github.com/yt-dlp/yt-dlp)：
@@ -186,9 +194,9 @@ https://www.youtube.com/@頻道名稱 這週發布了什麼？
 
 ### 輸出格式
 對於找到的每個影片，您將獲得：
-- 影片標題、日期和連結
+- 影片標題、日期（按您的本地時區）和連結
 - 英文摘要，包含主要主題和要點（600 字以內）
-- 中文摘要，內容相同（600 字以內）
+- 繁體中文摘要，內容相同（600 字以內）
 - 處理影片數量的最終統計
 
 ---
@@ -196,11 +204,13 @@ https://www.youtube.com/@頻道名稱 這週發布了什麼？
 ## 日本語
 
 ### 機能説明
-YouTube チャンネルの URL と期間を Claude に伝えると、以下を実行します：
+YouTube チャンネルの URL を Claude に伝えると、以下を実行します：
 1. チャンネルの最新動画を取得
 2. 指定した期間内に投稿された動画を絞り込む（デフォルト：過去 24 時間）
 3. 各動画の英語字幕をダウンロード
-4. 各動画の**英語 + 中国語**バイリンガル要約を生成
+4. 各動画の**英語 + あなたが使った言語**の要約を生成
+
+日本語でプロンプトを書くと、英語 + 日本語の要約が得られます。スペイン語なら英語 + スペイン語。英語なら英語のみ。
 
 ### 必要条件
 このスキルを使用する前に [yt-dlp](https://github.com/yt-dlp/yt-dlp) をインストールしてください：
@@ -231,9 +241,9 @@ https://www.youtube.com/@チャンネル名 は今週何を投稿した？
 
 ### 出力形式
 見つかった各動画について以下が出力されます：
-- 動画のタイトル、日付、URL
+- 動画のタイトル、日付（ローカルタイムゾーン）、URL
 - 英語の要約（メインテーマと要点、600 語以内）
-- 中国語の要約（同じ内容、600 語以内）
+- 日本語の要約（同じ内容、600 語以内）
 - 処理した動画数の最終カウント
 
 ---
