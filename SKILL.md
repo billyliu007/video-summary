@@ -1,23 +1,26 @@
 ---
 name: video-summary
-description: "Given a YouTube channel URL, fetches the channel's recent uploads, filters for videos posted within a user-specified timeframe (default is last 24 hours), downloads their subtitles via yt-dlp, and produces a bilingual (English + Chinese) summary for each. Use this skill whenever the user wants to summarise new videos from a YouTube channel, check a channel for recent uploads, or get a digest of a creator's content over any time window. Trigger on phrases like \"summarise new videos\", \"check for new videos from this channel\", \"daily video summary\", \"what did [channel] post this week\", or any mention of a YouTube channel URL combined with summarisation."
+description: "Given a YouTube channel URL, fetches recent uploads, filters by a user-specified timeframe (default 24 hours), downloads subtitles via yt-dlp, and produces a summary in English plus the language the user wrote their prompt in. Use this skill whenever the user wants to summarise new videos from a YouTube channel, check a channel for recent uploads, or get a digest of a creator's content. Trigger on phrases like 'summarise new videos', 'check for new videos from this channel', 'daily video summary', 'what did [channel] post this week', or any mention of a YouTube channel URL combined with summarisation."
 ---
 
 ## Overview
 
 You will:
-1. Ask the user for a YouTube channel URL and timeframe if not already provided
-2. Use yt-dlp to list the channel's recent uploads
-3. Filter for videos uploaded within the specified timeframe (in the user's local timezone)
-4. For each new video, download and clean its subtitles
-5. Print a bilingual English + Chinese summary (≤600 words each) for each video
+1. Detect the language the user wrote their prompt in
+2. Ask for a YouTube channel URL and timeframe if not already provided
+3. Use yt-dlp to list the channel's recent uploads
+4. Filter for videos uploaded within the specified timeframe (in the user's local timezone)
+5. For each new video, download and clean its subtitles
+6. Print a summary in **English** (always) + **the user's prompt language** (if different from English)
 
 ---
 
-## Step 1 — Ask for the channel URL and timeframe (if not already provided)
+## Step 1 — Detect language, channel URL, and timeframe
 
-Check what the user has given you:
-- If no channel URL → ask for it
+**Detect the prompt language** by reading the words the user wrote. This becomes the second output language for all summaries. If the prompt is in English, output English only (no duplicate).
+
+**Check what the user has given you:**
+- If no channel URL → ask for it (ask in the user's language)
 - If no timeframe mentioned → use **last 24 hours** as the default (do not ask, just proceed)
 - If they specified a timeframe (e.g. "last 3 days", "past week", "last 48 hours") → use that
 
@@ -155,14 +158,15 @@ If the output is `ERROR: No subtitle file found`, note that subtitles were unava
 
 ## Step 4 — Summarise
 
-Using the cleaned transcript, produce a summary with this structure:
+Using the cleaned transcript, produce a summary. The structure depends on the detected prompt language:
 
+**If the prompt was in English** — output English only:
 ```
 ## [Video Title]
-Date: [YYYY-MM-DD]
+Date: [YYYY-MM-DD HH:MM TZ]
 URL: [video URL]
 
-### Summary (English)
+### Summary
 **Main topic:** [one sentence]
 
 **Key points:**
@@ -174,26 +178,43 @@ URL: [video URL]
 [2–3 sentence closing synthesis]
 
 ---
+```
 
-### 摘要（中文）
-**主题：** [一句话概括]
+**If the prompt was in any other language** — output English first, then the user's language:
+```
+## [Video Title]
+Date: [YYYY-MM-DD HH:MM TZ]
+URL: [video URL]
 
-**要点：**
-- [要点 1]
-- [要点 2]
-- [要点 3]
+### Summary (English)
+**Main topic:** [one sentence]
+
+**Key points:**
+- [point 1]
 - ...
 
-[2–3句总结]
+[2–3 sentence closing synthesis]
+
+---
+
+### [Summary heading in user's language]
+[Full summary translated into the user's language, same structure]
 
 ---
 ```
 
+Use the natural heading for the user's language — for example:
+- Japanese → `### 要約`
+- Spanish → `### Resumen`
+- Traditional Chinese → `### 摘要（繁體中文）`
+- Simplified Chinese → `### 摘要（简体中文）`
+- French → `### Résumé`
+
 Keep each language version under 600 words. Use plain, readable language. Focus on what the speaker actually argued or demonstrated, not just the topic.
 
-After all videos are processed, print a one-line count:
+After all videos are processed, print a one-line count in the user's language:
 
-> "Processed N video(s) from [channel URL] in the last X hours."
+> "Processed N video(s) from [channel URL] in the last X hours."  ← English example; write this line in the user's language if different.
 
 ---
 
