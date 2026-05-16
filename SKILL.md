@@ -17,7 +17,11 @@ You will:
 
 ## Step 1 — Detect language, channel URL, and timeframe
 
-**Detect the prompt language** by reading the words the user wrote. This becomes the second output language for all summaries. If the prompt is in English, output English only (no duplicate).
+**Detect the prompt language** by reading the words the user wrote. Apply this rule strictly:
+- Prompt in **English** → output **English only**
+- Prompt in **any other language** → output **English first, then that language**
+
+Do not add a second language section when the prompt is in English, even if the channel content is non-English.
 
 **Check what the user has given you:**
 - If no channel URL → ask for it (ask in the user's language)
@@ -162,59 +166,67 @@ Using the cleaned transcript, produce a summary. The structure depends on the de
 
 **If the prompt was in English** — output English only:
 ```
-## [Video Title]
-Date: [YYYY-MM-DD HH:MM TZ]
-URL: [video URL]
+## 🎬 [Video Title]
+📅 [YYYY-MM-DD HH:MM TZ] | 🔗 [video URL]
 
-### Summary
-**Main topic:** [one sentence]
+### 📝 Summary
+🎯 **Main topic:** [one sentence]
 
-**Key points:**
+💡 **Key points:**
 - [point 1]
 - [point 2]
 - [point 3]
 - ...
 
-[2–3 sentence closing synthesis]
+🔍 [2–3 sentence closing synthesis]
 
 ---
 ```
 
 **If the prompt was in any other language** — output English first, then the user's language:
 ```
-## [Video Title]
-Date: [YYYY-MM-DD HH:MM TZ]
-URL: [video URL]
+## 🎬 [Video Title]
+📅 [YYYY-MM-DD HH:MM TZ] | 🔗 [video URL]
 
-### Summary (English)
-**Main topic:** [one sentence]
+### 📝 Summary (English)
+🎯 **Main topic:** [one sentence]
 
-**Key points:**
+💡 **Key points:**
 - [point 1]
+- [point 2]
+- [point 3]
 - ...
 
-[2–3 sentence closing synthesis]
+🔍 [2–3 sentence closing synthesis]
 
 ---
 
 ### [Summary heading in user's language]
-[Full summary translated into the user's language, same structure]
+🎯 **[Main topic label]:** [one sentence]
+
+💡 **[Key points label]:**
+- [point 1]
+- [point 2]
+- [point 3]
+- ...
+
+🔍 [2–3 sentence closing synthesis in user's language]
 
 ---
 ```
 
 Use the natural heading for the user's language — for example:
-- Japanese → `### 要約`
-- Spanish → `### Resumen`
-- Traditional Chinese → `### 摘要（繁體中文）`
-- Simplified Chinese → `### 摘要（简体中文）`
-- French → `### Résumé`
+- Japanese → `### 📝 要約`
+- Spanish → `### 📝 Resumen`
+- Traditional Chinese → `### 📝 摘要（繁體中文）`
+- Simplified Chinese → `### 📝 摘要（简体中文）`
+- French → `### 📝 Résumé`
 
 Keep each language version under 600 words. Use plain, readable language. Focus on what the speaker actually argued or demonstrated, not just the topic.
 
 After all videos are processed, print a one-line count in the user's language:
 
-> "Processed N video(s) from [channel URL] in the last X hours."  ← English example; write this line in the user's language if different.
+> ✅ Processed N video(s) from [channel URL] in the last X hours.  ← English example; write this line in the user's language if different.
 
 ---
 
